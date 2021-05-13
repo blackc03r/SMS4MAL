@@ -30,6 +30,22 @@ const App = () => {
         autoFocus={true}
       />
 
+      <AutoGrowingTextInput
+        style={styles.textMessage}
+        placeholder={' Send Encrypted Message ... '}
+        placeholderTextColor={'#66737C'}
+        value={textMessage}
+        onChangeText={onChangeTextMessage}
+        maxHeight={200}
+        minHeight={45}
+        enableScrollCaret={true}
+        onPress={() => { console.log('Text Message is pressed.') }}
+      />
+
+      <Text>
+        Character Count : {textMessage.length}
+      </Text>
+
     </SafeAreaView>
   );
 }
@@ -44,6 +60,16 @@ const styles = StyleSheet.create({
   normalText: {
     fontSize: 13,
     color: 'dodgerblue',
+  },
+  textMessage: {
+    padding: "0.5%",
+    borderRadius: 8,
+    marginBottom: "5%",
+    color: "dodgerblue",
+    fontSize: 14.5,
+    width: "100%",
+    paddingLeft: "1%",
+    paddingRight: "1%"
   },
   headingText: {
     fontSize: 18.5,
