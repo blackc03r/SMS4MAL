@@ -4,91 +4,140 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
-  Button
+  Button,
+  Alert,
+  ToastAndroid,
+  Platform,
 } from 'react-native';
+
+
+import colors from './colors'
+import styles from './AppStyles'
 
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import PhoneInput from 'react-native-phone-number-input';
 
-const App = () => {
+const IsAndroid = Platform.OS === 'android';
 
+const showErrorToast = (message) => {
+  ToastAndroid.showWithGravityAndOffset(
+    message,
+    ToastAndroid.SHORT,
+    ToastAndroid.BOTTOM,
+    25,
+    50
+  );
+};
+
+const Separator = () => (
+  <View style={styles.separator} />
+);
+
+const App = () => {
   const [phoneNumber, onChangePhoneNumber] = React.useState(null);
   const [textMessage, onChangeTextMessage] = React.useState(null);
-  const phoneNumberInput = React.useRef(PhoneInput);
 
-  const handlePreSending = () => { console.log('Send Message is clicked.') }
+  const phoneNumberInputRef = React.useRef(PhoneInput);
+
+  const handleSendButton = () => {
+    if (phoneNumberInputRef.current?.isValidNumber(phoneNumber)) {
+      if (textMessage !== null && textMessage.length > 0) {
+        Alert.alert("Send Message:", "This message is about to send.",
+          [
+            { text: "Send", onPress: () => { console.log("Sending...") } },
+            { text: "Cancel", onPress: () => { console.log('No') } }
+          ]
+        )
+      }
+      else { IsAndroid ? showErrorToast("Message is empty!") : alert("Message is Empty!") }
+    }
+    else { IsAndroid ? showErrorToast("Invalid Phone Number!") : alert("Invalid Phone Number!") }
+  }
+
+  const handleCancelButton = () => {
+    if (textMessage !== null) {
+      onChangeTextMessage(null)
+      IsAndroid ? showErrorToast("Message is cleared!") : alert("Message is cleared!")
+    }
+    else {
+      IsAndroid ? showErrorToast("Nothing to cancel!") : alert("Nothing to cancel!")
+    }
+  }
   return (
-    <SafeAreaView style={styles.rootContainer}>
+    <>
+      <SafeAreaView style={styles.rootContainer}>
 
-      <PhoneInput
-        ref={phoneNumberInput}
-        defaultValue={phoneNumber}
-        defaultCode="MM"
-        layout="first"
-        onChangeText={onChangePhoneNumber}
-        disableArrowIcon={true}
-        withDarkTheme={true}
-        withShadow={true}
-        autoFocus={true}
-      />
+        <View style={styles.textContainer}>
 
-      <AutoGrowingTextInput
-        style={styles.textMessage}
-        placeholder={' Send Encrypted Message ... '}
-        placeholderTextColor={'#66737C'}
-        value={textMessage}
-        onChangeText={onChangeTextMessage}
-        maxHeight={200}
-        minHeight={45}
-        enableScrollCaret={true}
-        onPress={() => { console.log('Text Message is pressed.') }}
-      />
+          {/* {textMessage && !phoneNumber && (
+            <Text style={{ color: colors.CoralRed }}>
+              No Phone Number.
+            </Text>
+          )} */}
 
-      <Text style={styles.normalText}>
-        Character Count : {textMessage ? textMessage.length : 0}
-      </Text>
+          <Text style={{ color: colors.CoralRed }}>
+            {!phoneNumber && textMessage && ("Did you forget to enter phone number?")}
+          </Text>
 
-      <Button
-        title=" Send Message "
-        style={styles.sendButton}
-        onPress={handlePreSending}
-        accessibilityLabel="Click me to send the message."
-      />
 
-    </SafeAreaView>
+          <PhoneInput
+            ref={phoneNumberInputRef}
+            defaultValue={phoneNumber}
+            defaultCode="MM"
+            layout="first"
+            onChangeText={onChangePhoneNumber}
+            disableArrowIcon={true}
+            withDarkTheme={true}
+            withShadow={true}
+            autoFocus={true}
+            textInputStyle={{ color: colors.Emeraid }}
+            codeTextStyle={{ color: colors.Sunglow }}
+          />
+
+          <Separator />
+
+          <AutoGrowingTextInput
+            style={styles.textMessage}
+            placeholder={' Send Encrypted Message ... '}
+            placeholderTextColor={'#66737C'}
+            value={textMessage}
+            onChangeText={onChangeTextMessage}
+            maxHeight={200}
+            minHeight={45}
+            enableScrollCaret={true}
+            onPress={
+              () => { console.log('Text Message is pressed.') }
+            }
+          />
+
+          <Text style={styles.normalText}>
+            Character Count : {textMessage ? textMessage.length : 0}
+          </Text>
+
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button
+            title="  Clear  "
+            color={colors.CoralRed}
+            // onPress={() => { Alert.alert('Alert Message', 'This is cancel event.') }
+            onPress={handleCancelButton}
+          />
+          <Button
+            title="   Send   "
+            color={colors.CrayolaBlue}
+            onPress={handleSendButton}
+            accessibilityLabel="Send the message."
+          />
+        </View>
+      </SafeAreaView>
+
+      <View style={styles.footContainer}>
+        <Text style={{ color: 'gray' }}> developed by minlaxz </Text>
+      </View>
+
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  rootContainer: {
-    flex: 1,
-    backgroundColor: '#1b1b1b',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  normalText: {
-    fontSize: 12,
-    color: 'gray',
-    marginBottom: "5%"
-  },
-  textMessage: {
-    padding: "0.5%",
-    borderRadius: 8,
-    marginBottom: "5%",
-    color: "dodgerblue",
-    fontSize: 14.5,
-    width: "100%",
-    paddingLeft: "1%",
-    paddingRight: "1%"
-  },
-  headingText: {
-    fontSize: 18.5,
-    color: 'blue',
-  },
-  sendButton: {
-    width: "30%",
-  },
-
-})
 
 export default App;
