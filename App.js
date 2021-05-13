@@ -1,11 +1,36 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+} from 'react-native';
+
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
+import PhoneInput from 'react-native-phone-number-input';
 
 const App = () => {
+
+  const [phoneNumber, onChangePhoneNumber] = React.useState(null);
+  const [textMessage, onChangeTextMessage] = React.useState(null);
+  const phoneNumberInput = React.useRef(PhoneInput);
+
   return (
-    <View style={styles.rootContainer}>
-      <Text style={styles.normalText}>Hello, World!</Text>
-    </View>
+    <SafeAreaView style={styles.rootContainer}>
+
+      <PhoneInput
+        ref={phoneNumberInput}
+        defaultValue={phoneNumber}
+        defaultCode="MM"
+        layout="first"
+        onChangeText={onChangePhoneNumber}
+        disableArrowIcon={true}
+        withDarkTheme={true}
+        withShadow={true}
+        autoFocus={true}
+      />
+
+    </SafeAreaView>
   );
 }
 
