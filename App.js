@@ -4,6 +4,7 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
+  Button
 } from 'react-native';
 
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
@@ -15,6 +16,7 @@ const App = () => {
   const [textMessage, onChangeTextMessage] = React.useState(null);
   const phoneNumberInput = React.useRef(PhoneInput);
 
+  const handlePreSending = () => { console.log('Send Message is clicked.') }
   return (
     <SafeAreaView style={styles.rootContainer}>
 
@@ -42,9 +44,16 @@ const App = () => {
         onPress={() => { console.log('Text Message is pressed.') }}
       />
 
-      <Text>
-        Character Count : {textMessage.length}
+      <Text style={styles.normalText}>
+        Character Count : {textMessage ? textMessage.length : 0}
       </Text>
+
+      <Button
+        title=" Send Message "
+        style={styles.sendButton}
+        onPress={handlePreSending}
+        accessibilityLabel="Click me to send the message."
+      />
 
     </SafeAreaView>
   );
@@ -58,8 +67,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   normalText: {
-    fontSize: 13,
-    color: 'dodgerblue',
+    fontSize: 12,
+    color: 'gray',
+    marginBottom: "5%"
   },
   textMessage: {
     padding: "0.5%",
@@ -74,6 +84,9 @@ const styles = StyleSheet.create({
   headingText: {
     fontSize: 18.5,
     color: 'blue',
+  },
+  sendButton: {
+    width: "30%",
   },
 
 })
