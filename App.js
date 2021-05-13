@@ -8,6 +8,8 @@ import {
   Alert,
   ToastAndroid,
   Platform,
+  NativeModules,
+  PermissionsAndroid,
 } from 'react-native';
 
 
@@ -16,6 +18,8 @@ import styles from './AppStyles'
 
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import PhoneInput from 'react-native-phone-number-input';
+
+let DirectSms = NativeModules.LaxzDirectSms;
 
 const IsAndroid = Platform.OS === 'android';
 
@@ -29,6 +33,7 @@ const showErrorToast = (message) => {
   );
 };
 
+
 const Separator = () => (
   <View style={styles.separator} />
 );
@@ -39,12 +44,40 @@ const App = () => {
 
   const phoneNumberInputRef = React.useRef(PhoneInput);
 
+  const sendSmsCall = async () => {
+    if (phoneNumber) {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.SEND_SMS,
+          {
+            title: 'SMS4MAL App Sms Permission',
+            message:
+              'SMS4MAL App needs access to your inbox ' +
+              'so you can send messages in background.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // DirectSms.sendDirectSms(phoneNumber, textMessage);
+          alert('SMS is sent.');
+          onChangeTextMessage(null)
+        } else {
+          alert('SMS Permission denied');
+        }
+      } catch (error) {
+        console.warn(error);
+        alert(error);
+      }
+    }
+  }
   const handleSendButton = () => {
     if (phoneNumberInputRef.current?.isValidNumber(phoneNumber)) {
       if (textMessage !== null && textMessage.length > 0) {
         Alert.alert("Send Message:", "This message is about to send.",
           [
-            { text: "Send", onPress: () => { console.log("Sending...") } },
+            { text: "Send", onPress: sendSmsCall },
             { text: "Cancel", onPress: () => { console.log('No') } }
           ]
         )
