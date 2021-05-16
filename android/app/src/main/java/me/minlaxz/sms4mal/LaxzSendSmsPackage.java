@@ -1,10 +1,10 @@
-package com.sms4mal;
+package me.minlaxz.sms4mal;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.sms4mal.LaxzSendSmsModule;
+import me.minlaxz.sms4mal.LaxzSendSmsModule;
 
 import java.util.ArrayList;
 import java.util.Collections;

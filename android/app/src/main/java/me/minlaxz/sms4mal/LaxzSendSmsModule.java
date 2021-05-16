@@ -1,4 +1,4 @@
-package com.sms4mal;
+package me.minlaxz.sms4mal;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
