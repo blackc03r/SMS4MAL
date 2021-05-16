@@ -60,7 +60,7 @@ const App = () => {
           },
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          // DirectSms.sendDirectSms(phoneNumber, textMessage);
+          DirectSms.sendDirectSms(phoneNumber, textMessage);
           alert('SMS is sent.');
           onChangeTextMessage(null)
         } else {
